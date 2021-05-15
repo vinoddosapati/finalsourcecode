@@ -7,7 +7,7 @@ import cv2
 import csv
 from csvgenerate import mergingAll
 
-
+# process the dataset
 def process_data(names, latex_key, img_path, save_path, close_kernel=None, dilate_kernel=None, tr_cv_split=80):
     if close_kernel is None:
         close_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
@@ -17,14 +17,12 @@ def process_data(names, latex_key, img_path, save_path, close_kernel=None, dilat
     for k, name in enumerate(names):
         sys.stdout.write(name + "\n")
         # create key
-
         key[k] = latex_key[name] if(name in latex_key) else  name.lower()
-
         # get files of images
         imgs = []
         img_files = listdir(img_path + name + '\\')
         shuffle(img_files)
-
+        # each image of component to a train or test component .csv file
         for i, img_file in enumerate(img_files):
             file = img_path + name + '\\' + img_file
             img = mpimg.imread(file)
@@ -111,10 +109,13 @@ print("Split train and test spliting........")
 img_path = '.\\extracted_images\\'
 img_names = listdir(img_path)
 save_path = '.\\savedata\\'
-# process_data(img_names, latex_key, img_path, save_path)
+# process the dataset
+# each image of component to a train or test component .csv file
+process_data(img_names, latex_key, img_path, save_path)
 
 print("combine and dict...........")
 # Combine all train and all test generate dict
 tr_path = '.\\savedata\\tr\\'
 cv_path = '.\\savedata\\cv\\'
+# merging all component .csv files to train, test .csv files
 mergingAll(img_names, tr_path, cv_path, save_path)
