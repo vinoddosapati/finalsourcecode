@@ -9,7 +9,7 @@ Install Python 3.7+ and pip
 
 Step 2.
 Inside /soucecode folder, open command prompt or terminal create a virtual enviroment and activate
-Create virtual enviroment command : "python3 -m venv tutorial-env"
+Create virtual enviroment command : "python -m venv tutorial-env"
 Activate virtual enviroment:
 On Windows, run: "tutorial-env\Scripts\activate"
 On Unix or MacOS, run: "source tutorial-env/bin/activate"
@@ -38,9 +38,9 @@ for backend:
 1.Install Python 3.7+ and pip
 2.Step 2.
 Inside /soucecode folder, open command prompt or terminal create a virtual enviroment and activate
-Create virtual enviroment command : "python3 -m venv tutorial-env"
+Create virtual enviroment command : "python -m venv tutorial-env"
 Activate virtual enviroment:
-On Windows, run: "tutorial-env\Scripts\activate.bat"
+On Windows, run: "tutorial-env\Scripts\activate"
 On Unix or MacOS, run: "source tutorial-env/bin/activate"
 3.pip install -r requirements.txt
 4. Inside /sourcecode folder
