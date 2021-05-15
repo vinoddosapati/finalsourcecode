@@ -28,7 +28,9 @@ def classify(components):
     predict_results = new_model.predict(test)
     predicts = []
     for i in range(predict_results.shape[0]):
+        # get max possible value for each component prediction
         predicts.append(np.argmax(predict_results[i]))
+    # append output to components dict
     for i, d in enumerate(predicts):
         components[i + 1]['label'] = d
         components[i + 1]['output'] = key[d]
@@ -59,14 +61,18 @@ def assign_group(components, offset_threshold=3):
 
 # find superscript for simple numerics
 def superscriptnums(newComp, components):
+    # sorting by left closest elements
     l_order = sorted(newComp.keys(), key=lambda x: newComp[x]['tl'][1])
+    # taking first element as reference
     pt, pl = newComp[l_order[0]]['tl']
     pb, pr = newComp[l_order[0]]['br']
+    # mid point in the first component
     mid = (pb+pt)//2
     for i in range(1, len(l_order)):
         ct, cl = newComp[l_order[i]]['tl']
         cb, cr = newComp[l_order[i]]['br']
         if(cb<mid):
+            # assigning as superscript
             components[l_order[i]]['sup'] = True
 
     return components
@@ -76,13 +82,18 @@ def detect_script(components, groups):
     for g in groups:
         bottoms = []
         tops = []
+        # storing bottoms, tops value of each component
         for i in sorted(components.keys()):
             if(components[i]['group'] == g):
                 bottoms.append(components[i]['br'][0])
                 tops.append(components[i]['tl'][0])
+        # Means of bottoms
         bottoms_mean = np.mean(bottoms)
+        # Standard Devation of bottoms
         bottoms_std = np.std(bottoms)
+        # Means of tops
         tops_mean = np.mean(tops)
+        # Standard Devation of tops
         tops_std = np.std(tops)
         nums = [str(i) for i in range(10)]
         nums.append("\sqrt")
@@ -101,9 +112,6 @@ def detect_script(components, groups):
                 else:
                     if(components[k]['output'] != '\sqrt'):
                         new_comp[k] = components[k]
-        print("flag ", flag)
-        print("new com ", new_comp)
-        print("new com ", new_comp.keys())
         if(flag):
             components = superscriptnums(new_comp, components)
             continue
@@ -111,29 +119,37 @@ def detect_script(components, groups):
             continue
         for i in components:
             if components[i]['group'] == g:
+                # z-score of bottoms
                 z_score_bottom = (bottoms_mean - components[i]['br'][0]) / bottoms_std
+                # z-score of tops
                 z_score_top = (components[i]['tl'][0] - tops_mean) / tops_std
                 s = z_score_bottom - z_score_top
+                # assign as superscript
                 if s > 2.35:
                     components[i]['sup'] = True
     return components
 
 # finding difference between minus and fraction line
 def finffrac(components, groups):
+    # sorting by left closest elements
     l_order = sorted(components.keys(), key=lambda x: components[x]['tl'][1])
     for i in range(len(l_order)):
+        # looking at minus or fraction
         if (components[l_order[i]]['output'] == '-'):
             idx = i
             minus_range = [components[l_order[idx]]["tl"][1], components[l_order[idx]]["br"][1]]
             comp_range = [components[l_order[i+1]]["tl"][1], components[l_order[i+1]]["br"][1]]
             if(minus_range[0] <= comp_range[0] <= comp_range[1] <= minus_range[1] and components[l_order[idx]]['group'] == components[l_order[i+1]]['group']):                
+                # found dash as a fraction not minus
                 components[l_order[idx]]['output'] = '\\frac'    
                 components[l_order[idx]]['frac'] = True            
     return components
 
 # new order after determining numerator and denominators
 def neworder(components, groups):
+    # finding difference between minus and fraction line
     components = finffrac(components, groups)
+    # sorting by left closest elements
     l_order = sorted(components.keys(), key=lambda x: components[x]['tl'][1])
     order = [components[i]["output"] for i in l_order]
     num = []
@@ -154,10 +170,12 @@ def neworder(components, groups):
                 components[i]['sup'] = False
                 components[i]['sub'] = False
                 if(components[idx]["tl"][0] < components[i]["tl"][0]):
+                    # assign as denominator
                     components[i]['frac'] = True
                     components[i]['deno'] = True
                     denom.append(i)
                 else:
+                    # assign as numaretor
                     components[i]['frac'] = True
                     components[i]['num'] = True
                     num.append(i)
@@ -173,10 +191,12 @@ def neworder(components, groups):
                 new_denCom = {}
                 for k1 in num:
                     new_numCom[k1] = components[k1]
+                # find superscripts in numaretor
                 components = superscriptnums(new_numCom, components)
 
                 for k2 in denom:
                     new_denCom[k2] = components[k2]
+                # find superscripts in denominator
                 components = superscriptnums(new_denCom, components)
 
                 s += num
@@ -199,10 +219,12 @@ def neworder(components, groups):
         new_denCom = {}
         for k1 in num:
             new_numCom[k1] = components[k1]
+        # find superscripts in numaretor
         components = superscriptnums(new_numCom, components)
 
         for k2 in denom:
             new_denCom[k2] = components[k2]
+        # find superscripts in denominator
         components = superscriptnums(new_denCom, components)
 
         s += num
@@ -213,6 +235,7 @@ def neworder(components, groups):
 
 # constructing after assigning groups, superscripts and fractions
 def construct_latex(components, groups):
+    # sorting by left closest elements
     lr_order = sorted(components.keys(), key=lambda x: components[x]['tl'][1])
     order = []
     for i in lr_order:
@@ -225,7 +248,7 @@ def construct_latex(components, groups):
     MODE_SUP = set()
     MODE_SUB = set()
     MODE_SQRT = {}
-    print("components 5 ", components)
+    print("components: ", components)
     for l in lr_order:
         t, left = components[l]['tl']
         b, right = components[l]['br']
@@ -259,7 +282,7 @@ def construct_latex(components, groups):
     for g in vsep:
         vsep[g] = ''.join(vsep[g])
 
-    print("after script",vsep)
+    # equation is just fraction with 3 groups
     if len(vsep) == 3:
         first_g, _, last_g = list(sorted([g for g in vsep], key=lambda g: g[0]))
         final = '\\frac{' + vsep[first_g] + '}{' + vsep[last_g] + '}'
@@ -271,21 +294,21 @@ def construct_latex(components, groups):
 
 # Main process
 def expLatex(data):
-    print("Enter")
+    print("Entered")
+    # decode base64 image
     file_name_X1 = Image.open(BytesIO(base64.b64decode(data)))
+    # process decoded base64 image
     X_processed1 = cv2.cvtColor(np.array(file_name_X1), cv2.COLOR_BGR2GRAY)
-    print("processed image shape ", X_processed1.shape)
     _, labels1 = cv2.connectedComponents(X_processed1)
-    print("labeled image shape ", labels1.shape)
+    # generate components from image
     components1 = get_components(labels1)
-    print("Components1: ", components1)
+    # predict each components from the trained model
     components2 = classify(components1)
-    print("Components2: ", components2)
+    # assign groups to each component
     components3, groups1 = assign_group(components2)
-    print("Components3: ", components3)
-    print("Groups : ", groups1)
+    # detect a component to be a subscript
     components4 = detect_script(components3, groups1)
-    print("Components4: ", components4)
+    # construct latex scripts from components
     expression1 = construct_latex(components4, groups1)
     print("expression : ", expression1)
     return expression1

@@ -21,6 +21,7 @@ eval_data = tf.reshape(eval_data, [-1, 45, 45, 1])
 eval_labels = data_cv[:, -1].astype(np.int32)
 print("data load DONE...")
 
+# input layer shape
 input_shape = (45, 45, 1)
 
 model = Sequential()
@@ -39,6 +40,7 @@ model.add(Dense(972, activation=tf.nn.relu))
 model.add(Dropout(0.2))
 model.add(Dense(240, activation=tf.nn.relu))
 model.add(Dropout(0.2))
+# 34 output predicts
 model.add(Dense(34, activation=tf.nn.softmax))
 
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics='accuracy')
@@ -47,4 +49,5 @@ print("training model.....")
 model.fit(x=train_data, y=train_labels, batch_size=250, epochs=1, shuffle=True, validation_data=(eval_data, eval_labels))
 print("training model DONE.....")
 
+# save model
 model.save('seq_model_new.model')

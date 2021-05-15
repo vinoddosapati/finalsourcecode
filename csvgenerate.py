@@ -2,8 +2,7 @@ import sys
 from os import listdir
 import numpy as np
 
-
-
+# merging all component .csv files to train, test .csv files
 def mergingAll(names, tr_path, cv_path, save_path, shuffle=True):
     paths = [(tr_path, '_tr.csv'), (cv_path, '_cv.csv')]
     for path, ending in paths:
