@@ -30,8 +30,8 @@ For future developments:
 for frontend
 1. Inside /sourcecode/frontend
 2. node 15.10.0, npm 7.6.0, cli 11.2.2
-3. npm install
-4. ng build
+3. npm install for node_modules
+4. ng build for dist folder
 5. ng serve -o
 
 for backend:
@@ -44,11 +44,11 @@ On Windows, run: "tutorial-env\Scripts\activate"
 On Unix or MacOS, run: "source tutorial-env/bin/activate"
 3.pip install -r requirements.txt
 4. Inside /sourcecode folder
-2. /extracted_images is the dataset
-3. /savedata is the train and test split of dataset
-4. If required to train and test split of an UPDATED dataset, the run command "python normilize.py" else skip this step.
-5. If required to train a the model or "/seq_model_new.model" folder doesnt exists, then run command "python seqcnn.py", else skip.
-6. Run the main pyhton file "python api.py"
+5. /extracted_images is the dataset
+6. /savedata is the train and test split of dataset
+7. If required to train and test split of an UPDATED dataset, the run command "python normilize.py" else skip this step.
+8. If required to train a the model or "/seq_model_new.model" folder doesnt exists, then run command "python seqcnn.py", else skip.
+9. Run the main pyhton file "python api.py"
 
 Final step: Open angular localhost (default is localhost:4200)
 

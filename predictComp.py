@@ -17,7 +17,7 @@ key = dict(zip(df.iloc[:, 0], df.iloc[:, 1]))
 
 
 #predict each component
-def classify(components):
+def predictionComponents(components):
     test = np.asarray([
         components[i]['pic'] for i in sorted(components.keys())
     ]).astype(np.float32)
@@ -37,26 +37,26 @@ def classify(components):
     return components
 
 # group assign 
-def assign_group(components, offset_threshold=3):
+def groupDetection(components, offset_threshold=3):
     heights = []
     for i in components:
         heights.append([components[i]['tl'][0], components[i]['br'][0]])
     groups = [heights[0]]
     new_height = heights[1:]
-    for height in new_height:
+    for h in new_height:
         # checking the next element belong to same group
-        if height[0] + offset_threshold < groups[-1][1]:
-            groups[-1][1] = max(height[1], groups[-1][1])
+        if h[0] + offset_threshold < groups[-1][1]:
+            groups[-1][1] = max(h[1], groups[-1][1])
         else:
             # adding to another group
-            groups.append(height)
+            groups.append(h)
     for i in components:
-        for group in groups:
-            x = group[0]
-            y = group[1]
+        for g in groups:
+            x = g[0]
+            y = g[1]
             # assign each component to a group
             if x < components[i]['tl'][0] + offset_threshold < y:
-                components[i]['group'] = group
+                components[i]['group'] = g
     return components, groups
 
 # find superscript for simple numerics
@@ -78,7 +78,7 @@ def superscriptnums(newComp, components):
     return components
 
 # detect superscripts based on z score and method superscriptnums
-def detect_script(components, groups):
+def supScriptDetect(components, groups):
     for g in groups:
         bottoms = []
         tops = []
@@ -234,7 +234,7 @@ def neworder(components, groups):
     return s
 
 # constructing after assigning groups, superscripts and fractions
-def construct_latex(components, groups):
+def latexConstruct(components, groups):
     # sorting by left closest elements
     lr_order = sorted(components.keys(), key=lambda x: components[x]['tl'][1])
     order = []
@@ -244,7 +244,7 @@ def construct_latex(components, groups):
     order = []
     for i in lr_order:
         order.append(components[i]["output"])
-    vsep = {tuple(group): [] for group in groups}
+    groupscript = {tuple(group): [] for group in groups}
     MODE_SUP = set()
     MODE_SUB = set()
     MODE_SQRT = {}
@@ -252,45 +252,45 @@ def construct_latex(components, groups):
     for l in lr_order:
         t, left = components[l]['tl']
         b, right = components[l]['br']
-        for g in vsep:
+        for g in groupscript:
             if g[0] <= t and t <= b and b <= g[1]:
 
                 if g in MODE_SQRT and left > MODE_SQRT[g]:
-                    vsep[g].append('}')
+                    groupscript[g].append('}')
                     del MODE_SQRT[g]
                 if g in MODE_SUP and not components[l]['sup']:
-                    vsep[g].append('}')
+                    groupscript[g].append('}')
                     MODE_SUP.remove(g)
                 if g in MODE_SUB and not components[l]['sub']:
-                    vsep[g].append('}')
+                    groupscript[g].append('}')
                     MODE_SUB.remove(g)
                 if g not in MODE_SUP and components[l]['sup']:
-                    vsep[g].append('^{')
+                    groupscript[g].append('^{')
                     MODE_SUP.add(g)
                 if g not in MODE_SUB and components[l]['sub']:
-                    vsep[g].append('_{')
+                    groupscript[g].append('_{')
                     MODE_SUB.add(g)
-                vsep[g].append(components[l]['output'] + ' ')
+                groupscript[g].append(components[l]['output'] + ' ')
                 if components[l]['output'] == '\\sqrt':
                     MODE_SQRT[g] = right
-                    vsep[g].append('{')
+                    groupscript[g].append('{')
                 break
     for i in MODE_SQRT:
-        vsep[i].append('}')
+        groupscript[i].append('}')
     for j in MODE_SUP:
-        vsep[j].append('}')
-    for g in vsep:
-        vsep[g] = ''.join(vsep[g])
+        groupscript[j].append('}')
+    for g in groupscript:
+        groupscript[g] = ''.join(groupscript[g])
 
     # equation is just fraction with 3 groups
-    if len(vsep) == 3:
-        first_g, _, last_g = list(sorted([g for g in vsep], key=lambda g: g[0]))
-        final = '\\frac{' + vsep[first_g] + '}{' + vsep[last_g] + '}'
+    if len(groupscript) == 3:
+        f_group, _, l_group = list(sorted([g for g in groupscript], key=lambda g: g[0]))
+        final_script = '\\frac{' + groupscript[f_group] + '}{' + groupscript[l_group] + '}'
     else:
-        final = list(vsep.values())[0]
-    final = final.replace(" ", "")
-    final = final.replace("\lambda", "\lambda ")
-    return final
+        final_script = list(groupscript.values())[0]
+    final_script = final_script.replace(" ", "")
+    final_script = final_script.replace("\lambda", "\lambda ")
+    return final_script
 
 # Main process
 def expLatex(data):
@@ -303,12 +303,12 @@ def expLatex(data):
     # generate components from image
     components1 = get_components(labels1)
     # predict each components from the trained model
-    components2 = classify(components1)
+    components2 = predictionComponents(components1)
     # assign groups to each component
-    components3, groups1 = assign_group(components2)
+    components3, groups1 = groupDetection(components2)
     # detect a component to be a subscript
-    components4 = detect_script(components3, groups1)
+    components4 = supScriptDetect(components3, groups1)
     # construct latex scripts from components
-    expression1 = construct_latex(components4, groups1)
+    expression1 = latexConstruct(components4, groups1)
     print("expression : ", expression1)
     return expression1

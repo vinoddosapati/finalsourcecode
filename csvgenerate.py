@@ -10,11 +10,12 @@ def mergingAll(names, tr_path, cv_path, save_path, shuffle=True):
         for i, name in enumerate(names):
             # print progress
             sys.stdout.write('\r')
-            formatted_names = '{:.2%}'.format(i/len(names))
+            no_files = len(names)
+            formatted_names = '{:.2%}'.format(i/no_files)
             sys.stdout.write(formatted_names)
             sys.stdout.flush()
-
-            curr = np.loadtxt(path + name + ending, delimiter=',')
+            each_path = path + name + ending
+            curr = np.loadtxt(each_path, delimiter=',')
             if X is None:
                 X = curr.copy()
                 continue
@@ -24,4 +25,5 @@ def mergingAll(names, tr_path, cv_path, save_path, shuffle=True):
         # shuffle
         if shuffle:
             np.random.shuffle(X)
-        np.savetxt(save_path + 'all' + ending, X, delimiter=',', fmt='%i')
+        allfiles_path = save_path + 'all' + ending
+        np.savetxt(allfiles_path, X, delimiter=',', fmt='%i')

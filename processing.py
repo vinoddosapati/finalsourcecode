@@ -34,7 +34,7 @@ def get_components(labels, pad_width=3, erosion_percent=0.4, show=True):
         components[i]['tl'] = (top, left)
         label_padded[label_padded != i] = 0
         label_padded = label_padded//i
-        # resize the extrated component to 45*45
+        # extract each component to a np array
         arr_square = label_padded[top :bottom + pad_width + pad_width, left :right + pad_width + pad_width]
         x = arr_square.shape[1]
         y = arr_square.shape[0]
@@ -47,6 +47,7 @@ def get_components(labels, pad_width=3, erosion_percent=0.4, show=True):
             arr_square = np.hstack([np.zeros([y, pad]), arr_square])
             arr_square = np.hstack([arr_square, np.zeros([y, pad + (diff % 2 == 1)])])
         label_square = arr_square
+        # resize to 45*45 pixels size
         dimension = 45
         label_square = cv2.resize(label_square, (dimension, dimension))
         label_square[label_square != 0] = 1

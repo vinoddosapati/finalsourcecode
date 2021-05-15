@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\dpati\OneDrive\Desktop\testproj\angproj\src\main.ts */"zUnb");
+module.exports = __webpack_require__(/*! C:\Users\dpati\OneDrive\Desktop\newproject\finalsourcecode\frontend\src\main.ts */"zUnb");
 
 
 /***/ }),
@@ -158,14 +158,14 @@ TinymcecompComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdef
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppModule", function() { return AppModule; });
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/platform-browser */ "jhN1");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "s7LF");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "3Pt+");
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app-routing.module */ "vY5A");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app.component */ "Sy1n");
 /* harmony import */ var _view_lat_view_lat_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view-lat/view-lat.component */ "fznp");
 /* harmony import */ var _navbar_navbar_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./navbar/navbar.component */ "kWWo");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common/http */ "IheW");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
 /* harmony import */ var _tinymcecomp_tinymcecomp_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./tinymcecomp/tinymcecomp.component */ "U470");
-/* harmony import */ var _tinymce_tinymce_angular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @tinymce/tinymce-angular */ "crmZ");
+/* harmony import */ var _tinymce_tinymce_angular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @tinymce/tinymce-angular */ "fB2i");
 /* harmony import */ var _editor_editor_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./editor/editor.component */ "xD4D");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/core */ "fXoL");
 
@@ -227,6 +227,7 @@ class ViewLatComponent {
     // public ctx: CanvasRenderingContext2D = this.canvas.getContext("2d");
     constructor(apiService) {
         this.apiService = apiService;
+        //  Send latex equation to parent component
         this.childevent = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.is_drawing = false;
         // setting a width and height for the canvas
@@ -241,6 +242,7 @@ class ViewLatComponent {
         this.canvas.width = this.width;
         this.canvas.height = this.height;
     }
+    // When Mouse is down
     startdraw(ev) {
         this.is_drawing = true;
         var rect = this.canvas.getBoundingClientRect();
@@ -253,6 +255,7 @@ class ViewLatComponent {
         this.ctx.moveTo(x, y);
         ev.preventDefault();
     }
+    // Mouse down and dragging
     logPan(ev) {
         if (this.is_drawing) {
             // console.log("event "+ev);
@@ -265,6 +268,7 @@ class ViewLatComponent {
             this.ctx.stroke();
         }
     }
+    // Touch start
     touchstartdraw(ev) {
         this.is_drawing = true;
         var rect = this.canvas.getBoundingClientRect();
@@ -277,6 +281,7 @@ class ViewLatComponent {
         this.ctx.moveTo(x, y);
         ev.preventDefault();
     }
+    // Touch and drag
     touchlogPan(ev) {
         if (this.is_drawing) {
             var rect = this.canvas.getBoundingClientRect();
@@ -286,23 +291,24 @@ class ViewLatComponent {
             this.ctx.stroke();
         }
     }
+    // Mouse out or touch end
     stopdraw(ev) {
         this.is_drawing = false;
     }
+    // save canvas image to encoded base64 image
+    // Send base64 to flask server
+    // Get latex script from flask
     saveAsjpg() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            // base64 image
             var img = this.canvas.toDataURL("image/jpg");
-            console.log("image " + img);
             var base64data = img.split(",")[1];
             img = "";
-            // console.log(base64data);
             var newbase64Img = base64data.replace(/\//g, "SLASH");
-            // console.log(newbase64Img);
-            // console.log(img);
             this.apiresult = yield this.apiService.getApiResult(newbase64Img).toPromise();
             console.log("flask response " + this.apiresult);
+            // Emmiting response to parent component
             this.childevent.emit(this.apiresult);
-            // this.childevent.emit('\\frac{1}{2}+\\sqrt{4}');
         });
     }
 }
@@ -411,7 +417,7 @@ AppRoutingModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineI
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EditorComponent", function() { return EditorComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "s7LF");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "3Pt+");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "fXoL");
 /* harmony import */ var _api_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api.service */ "yTNM");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "ofXK");
@@ -438,11 +444,13 @@ class EditorComponent {
     }
     ngOnInit() {
         this.getMathML();
+        // Load Calculator Form
         this.profileForm = new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormGroup"]({
             latexEquation: new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](this.parentData),
             firstName: new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](''),
             lastName: new _angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormControl"](''),
         });
+        // Load TinyMCE plugins
         tinymce.init({
             selector: 'textarea',
             base_url: '/tinymce',
@@ -462,8 +470,10 @@ class EditorComponent {
         });
         this.encodeParentData = encodeURIComponent(this.parentData);
         this.alt = this.parentData;
+        // Google Chart API
         this.src = "https://chart.googleapis.com/chart?cht=tx&amp;chf=a,s,000000|bg,s,FFFFFF00&amp;chl=" + this.encodeParentData;
     }
+    // MathML response
     getMathML() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             var getmathVal = this.parentData.replace(/\\/g, "FSLASH");
@@ -472,6 +482,7 @@ class EditorComponent {
             console.log("Math ML ", this.mathResult);
         });
     }
+    // Submit to Calculator and get response
     onSubmit() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             console.log("button submit");
@@ -544,7 +555,7 @@ EditorComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineCo
         _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate3"]("    <p>", ctx.mathResult, "</p>\n    <p><img class=\"latex\" src=\"", ctx.src, "\" alt=\"", ctx.alt, "\" /></p>\n    <!-- <p>be the Fourier transform of f.</p> -->\n      <!-- <p><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><msqrt><mn>2</mn><mo>+</mo><mn>3</mn></msqrt><mo>+</mo><mn>3</mn></math></p> -->\n");
+        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate3"]("    <!-- Math ML Result -->\n    MathType Result : <p>", ctx.mathResult, "</p>\n    <!-- Google Chart API result -->\n    Google Chart API result : <p><img class=\"latex\" src=\"", ctx.src, "\" alt=\"", ctx.alt, "\" /></p>\n");
         _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](13);
         _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("formGroup", ctx.profileForm);
         _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](15);
@@ -565,26 +576,31 @@ EditorComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineCo
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ApiService", function() { return ApiService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "IheW");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
 
 
 class ApiService {
     constructor(_http) {
         this._http = _http;
+        // Flask server URL
         this.rootURL = 'http://127.0.0.1:5000/';
+        // Flask api calls
         this.flaskURL = this.rootURL + 'imgdata/';
         this.calURL = this.rootURL + 'cal/';
         this.mathURL = this.rootURL + 'mathml/';
     }
+    // Get latex equations as response
     getApiResult(data) {
         this.flaskURL = this.flaskURL + data;
         console.log(this.flaskURL);
         return this._http.get(this.flaskURL, { responseType: 'text' });
     }
+    // Get calculated value to latex equation
     getCalResult(equation) {
         this.calURL = this.calURL + equation;
         return this._http.get(this.calURL, { responseType: 'text' });
     }
+    // Get MathML form of Latex Equation
     getMathml(latEq) {
         this.mathURL = this.mathURL + latEq;
         return this._http.get(this.mathURL, { responseType: 'text' });
