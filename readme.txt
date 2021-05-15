@@ -36,7 +36,7 @@ for frontend
 
 for backend:
 1.Install Python 3.7+ and pip
-2.Step 2.
+2.
 Inside /soucecode folder, open command prompt or terminal create a virtual enviroment and activate
 Create virtual enviroment command : "python -m venv tutorial-env"
 Activate virtual enviroment:

@@ -30,13 +30,17 @@ def predictionComponents(components):
     for i in range(predict_results.shape[0]):
         # get max possible value for each component prediction
         predicts.append(np.argmax(predict_results[i]))
-    # append output to components dict
+    components = outputAssign(components, predicts)
+    return components
+
+# append output to components dict
+def outputAssign(components, predicts):
     for i, d in enumerate(predicts):
         components[i + 1]['label'] = d
         components[i + 1]['output'] = key[d]
     return components
 
-# group assign 
+# group detection 
 def groupDetection(components, offset_threshold=3):
     heights = []
     for i in components:
@@ -50,6 +54,11 @@ def groupDetection(components, offset_threshold=3):
         else:
             # adding to another group
             groups.append(h)
+    components = groupAssignment(components, groups)
+    return components, groups
+
+# group assigning
+def groupAssignment(components, groups, offset_threshold=3):
     for i in components:
         for g in groups:
             x = g[0]
@@ -57,7 +66,8 @@ def groupDetection(components, offset_threshold=3):
             # assign each component to a group
             if x < components[i]['tl'][0] + offset_threshold < y:
                 components[i]['group'] = g
-    return components, groups
+    return components
+
 
 # find superscript for simple numerics
 def superscriptnums(newComp, components):
