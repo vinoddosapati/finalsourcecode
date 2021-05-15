@@ -8,6 +8,7 @@ import { ApiService } from '../api.service';
 })
 export class ViewLatComponent implements AfterViewInit  {
 
+//  Send latex equation to parent component
  @Output() public childevent = new EventEmitter();
 
   public is_drawing:boolean = false;
@@ -32,6 +33,7 @@ export class ViewLatComponent implements AfterViewInit  {
 
   }
 
+  // When Mouse is down
   startdraw(ev: any){
     this.is_drawing = true;
     var rect = this.canvas.getBoundingClientRect();
@@ -45,6 +47,7 @@ export class ViewLatComponent implements AfterViewInit  {
     ev.preventDefault();
   }
 
+  // Mouse down and dragging
   logPan(ev:any){
     if(this.is_drawing){
       // console.log("event "+ev);
@@ -58,6 +61,7 @@ export class ViewLatComponent implements AfterViewInit  {
      }
   }
 
+  // Touch start
   touchstartdraw(ev: any){
     this.is_drawing = true;
     var rect = this.canvas.getBoundingClientRect();
@@ -71,6 +75,7 @@ export class ViewLatComponent implements AfterViewInit  {
     ev.preventDefault();
   }
 
+  // Touch and drag
   touchlogPan(ev:any){
     if(this.is_drawing){
       var rect = this.canvas.getBoundingClientRect();
@@ -82,23 +87,24 @@ export class ViewLatComponent implements AfterViewInit  {
 
   }
 
+  // Mouse out or touch end
   stopdraw(ev: any){
     this.is_drawing = false;
   }
 
+  // save canvas image to encoded base64 image
+  // Send base64 to flask server
+  // Get latex script from flask
   async saveAsjpg(){
+    // base64 image
     var img = this.canvas.toDataURL("image/jpg");
-    console.log("image "+img);
     var base64data = img.split(",")[1];
     img="";
-    // console.log(base64data);
     var newbase64Img = base64data.replace(/\//g, "SLASH");
-    // console.log(newbase64Img);
-    // console.log(img);
     this.apiresult = await this.apiService.getApiResult(newbase64Img).toPromise();
     console.log("flask response "+ this.apiresult);
+    // Emmiting response to parent component
     this.childevent.emit(this.apiresult);
-    // this.childevent.emit('\\frac{1}{2}+\\sqrt{4}');
   }
 
 }

@@ -9,6 +9,7 @@ declare var tinymce: any;
 export class TinymcecompComponent implements OnInit {
 
   constructor(private apiservice: ApiService) { }
+  // Get equation from child component canvas
   public gotLatEq: any;
 
   ngOnInit(): void {

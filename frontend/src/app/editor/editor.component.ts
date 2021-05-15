@@ -9,6 +9,7 @@ declare var tinymce: any;
 })
 export class EditorComponent implements OnInit {
 
+  // Listen to parent data and load
   @Input() parentData:any;
   public src: any;
   public encodeParentData: any;
@@ -24,12 +25,14 @@ export class EditorComponent implements OnInit {
 
     this.getMathML()
 
+    // Load Calculator Form
     this.profileForm = new FormGroup({
       latexEquation: new FormControl(this.parentData),
       firstName: new FormControl(''),
       lastName: new FormControl(''),
     });
 
+    // Load TinyMCE plugins
     tinymce.init(
       {
         selector: 'textarea',
@@ -53,11 +56,13 @@ export class EditorComponent implements OnInit {
 
       this.encodeParentData = encodeURIComponent(this.parentData);
       this.alt = this.parentData;
+      // Google Chart API
       this.src = "https://chart.googleapis.com/chart?cht=tx&amp;chf=a,s,000000|bg,s,FFFFFF00&amp;chl="+this.encodeParentData;
 
 
   }
 
+  // MathML response
   async getMathML(){
     var getmathVal = this.parentData.replace(/\\/g, "FSLASH");
     getmathVal = getmathVal.replace(/\//g, "SLASH");
@@ -66,6 +71,7 @@ export class EditorComponent implements OnInit {
   }
 
 
+  // Submit to Calculator and get response
   async onSubmit() {
     console.log("button submit");
     var formgroupval = this.profileForm.value;

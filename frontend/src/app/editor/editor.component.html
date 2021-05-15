@@ -1,15 +1,10 @@
 <script src="https://cdn.tiny.cloud/1/6mye64isw7sa53tby150zwqi1peyh8b7jbesg2mw9idphbpc/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-<!-- <script src="https://wiris.net/demo/plugins/app/WIRISplugins.js?viewer=image"></script> -->
-<!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async
-          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script> -->
 
 <textarea >
-    <p>{{mathResult}}</p>
-    <p><img class="latex" src="{{src}}" alt="{{alt}}" /></p>
-    <!-- <p>be the Fourier transform of f.</p> -->
-      <!-- <p><math xmlns="http://www.w3.org/1998/Math/MathML"><msqrt><mn>2</mn><mo>+</mo><mn>3</mn></msqrt><mo>+</mo><mn>3</mn></math></p> -->
+    <!-- Math ML Result -->
+    MathType Result : <p>{{mathResult}}</p>
+    <!-- Google Chart API result -->
+    Google Chart API result : <p><img class="latex" src="{{src}}" alt="{{alt}}" /></p>
 </textarea>
 <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Calculator</button>
 
@@ -26,7 +21,6 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-          <!-- <p>{{mathResult}}</p> -->
           <label>
             Latex Equation:
             <input type="text" formControlName="latexEquation">
