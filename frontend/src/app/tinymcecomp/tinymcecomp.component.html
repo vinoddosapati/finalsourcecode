@@ -1,0 +1,24 @@
+<script src="https://cdn.tiny.cloud/1/6mye64isw7sa53tby150zwqi1peyh8b7jbesg2mw9idphbpc/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<!-- <script src="https://wiris.net/demo/plugins/app/WIRISplugins.js?viewer=image"></script> -->
+<!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script> -->
+<div class="row">
+  <div class="col-md-6">
+    <app-view-lat (childevent)="gotLatEq=$event"></app-view-lat>
+  </div>
+  <div class="col-md-6">
+    <div *ngIf="gotLatEq">
+      <app-editor [(parentData)]="gotLatEq"></app-editor>
+      <!-- <textarea >
+        {{gotLatEq}}
+        </textarea> -->
+    </div>
+  </div>
+</div>
+
+
+<!-- <p><img class="latex" src="https://chart.googleapis.com/chart?cht=tx&amp;chf=a,s,000000|bg,s,FFFFFF00&amp;chl=%5Cwidehat%7Bf%7D(%5Comega)%20=%20%5Cint_%7B%5Cmathbb%7BR%7D%7D%20f(x)%20%5Ccdot%20e%5E%7B-2%5Cpi%20i%20%5Comega%20x%7D%20dx" alt="\widehat{f}(\omega) = \int_{\mathbb{R}} f(x) \cdot e^{-2\pi i \omega x} dx" /></p> -->
+    <!-- <p>be the Fourier transform of f.</p> -->
+      <!-- <p><math xmlns="http://www.w3.org/1998/Math/MathML"><msqrt><mn>2</mn><mo>+</mo><mn>3</mn></msqrt><mo>+</mo><mn>3</mn></math></p> -->

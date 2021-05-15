@@ -1,0 +1,10 @@
+/* canvas {
+  background-color: blue;
+  box-shadow: 10px 10px 9px 6px red;
+  cursor: pointer;
+ } */
+ canvas {
+  background-color: blue;
+  cursor: pointer;
+  display: block;
+}
